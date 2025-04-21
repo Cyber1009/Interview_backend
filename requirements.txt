@@ -1,0 +1,24 @@
+fastapi>=0.103.1
+uvicorn>=0.23.2
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+sqlalchemy>=2.0.20
+psycopg2-binary>=2.9.7
+python-jose>=3.3.0
+python-multipart>=0.0.6
+bcrypt>=4.0.0
+passlib>=1.7.4
+aiofiles>=23.1.0
+openai>=1.0.0  # Updated to newer OpenAI API
+python-dotenv>=1.0.0
+gunicorn>=21.2.0
+stripe>=5.0.0
+ffmpeg-python>=0.2.0
+python-magic>=0.4.27
+tiktoken>=0.5.0  # For token counting with OpenAI
+loguru>=0.7.0  # Enhanced logging
+tenacity>=8.2.0  # For retrying API calls
+requests>=2.31.0  # HTTP requests library
+pydub>=0.25.1  # Audio processing
+email-validator>=2.0.0  # For email validation
+# SQLite is included in Python standard library, no additional package needed
