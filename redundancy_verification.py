@@ -22,7 +22,7 @@ def test_consolidated_dependencies():
             session_service_dependency,
             recording_service_dependency,
             reporting_service_dependency,
-            analytics_service_dependency
+            analysis_service_dependency
         )
         print("✅ Consolidated dependencies: SUCCESS")
         return True
