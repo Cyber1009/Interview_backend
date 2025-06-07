@@ -1,18 +1,11 @@
 """
 Candidates domain package.
-Contains endpoints for candidate session management and recording submission.
+Contains endpoints for token verification, session management, and recording upload.
+Batch processing is now automatic via session completion.
 """
-
-from .verification import verification_router
-from .sessions import sessions_router
+from .router import router
 from .recordings import recordings_router
+from .sessions import router as sessions_router
 
-# Legacy import kept for backward compatibility - this can be removed when router.py is updated
-from .candidates import candidates_router
-
-__all__ = [
-    "verification_router",
-    "sessions_router",
-    "recordings_router",
-    "candidates_router",  # Legacy router, maintained for backward compatibility
-]
+# Export the routers for cleaner imports
+__all__ = ["router", "recordings_router", "sessions_router"]

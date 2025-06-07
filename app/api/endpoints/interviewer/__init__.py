@@ -1,19 +1,27 @@
 """
 Interviewer domain package.
-Contains all endpoints related to interview management, questions, tokens, results, and theming.
+Contains endpoints for interview creation, management, and analysis.
 """
+# Import the consolidated router
+from app.api.endpoints.interviewer.router import router
 
-# Make the routers available at the package level for cleaner imports
-from .interviews import interviews_router
-from .questions import questions_router
-from .tokens import tokens_router
-from .results import results_router
-from .theme import theme_router
+# For backward compatibility, also import individual routers
+from app.api.endpoints.interviewer.interviews import router as interviews_router
+from app.api.endpoints.interviewer.profile import router as profile_router
+from app.api.endpoints.interviewer.results import router as results_router
+from app.api.endpoints.interviewer.analytics import router as analytics_router
+from app.api.endpoints.interviewer.settings import router as settings_router, theme_router
 
+# Export everything for explicit imports
 __all__ = [
+    # Main consolidated router
+    "router",
+    
+    # Individual routers for backward compatibility
     "interviews_router",
-    "questions_router",
-    "tokens_router",
+    "profile_router",
     "results_router",
-    "theme_router",
+    "analytics_router",
+    "settings_router",
+    "theme_router"
 ]

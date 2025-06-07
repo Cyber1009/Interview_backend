@@ -1,29 +1,48 @@
 """
 Recording, transcription and analysis related schemas.
 """
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, field_validator, Field
 from typing import List, Optional, Dict, Any
 from datetime import datetime
 import json
 
-# Recording Schemas
-class RecordingCreate(BaseModel):
-    session_id: int
-    question_id: int
-    audio_data: str  # Base64 encoded audio data
+from app.schemas.base_schemas import EntityBase
+from app.schemas.common_schemas import RecordingResponseBase, AnalysisResultBase
 
-class RecordingResponse(BaseModel):
-    id: int
+# --- Base schemas ---
+
+class RecordingBase(BaseModel):
+    """Base schema for recording information"""
+    session_id: int
+    file_path: Optional[str] = None
+
+
+class RecordingIdentifierBase(BaseModel):
+    """Base schema for recording identifiers"""
     session_id: int
     question_id: int
-    file_path: str
+
+
+# Reuse the common AnalysisBase to avoid duplication
+AnalysisBase = AnalysisResultBase
+
+
+# --- Recording Schemas ---
+
+class RecordingCreate(RecordingIdentifierBase):
+    """Schema for creating a new recording"""
+    audio_data: str = Field(..., description="Base64 encoded audio data")
+
+
+class RecordingResponse(RecordingResponseBase):
+    """Schema for recording response with transcription and analysis status"""
+    # The base is already defined in common_schemas
+    file_path: str  # Override with required field
     transcript: Optional[str] = None
-    transcription_status: str
     analysis: Optional[Dict[str, Any]] = None
-    analysis_status: str
-    created_at: datetime
     
-    @validator('analysis', pre=True)
+    @field_validator('analysis', mode='before')
+    @classmethod
     def parse_analysis(cls, v):
         if isinstance(v, str):
             try:
@@ -31,51 +50,59 @@ class RecordingResponse(BaseModel):
             except:
                 return None
         return v
-    
-    class Config:
-        from_attributes = True
 
-class RecordingWithTranscription(BaseModel):
-    id: int
-    session_id: int
-    file_path: str
+
+class RecordingWithTranscription(RecordingBase, EntityBase):
+    """Schema for recording with simplified transcription details"""
     duration: Optional[int] = None
     created_at: datetime
     transcription: Optional[str] = None
 
-# Transcription and Analysis Schemas
+
+# --- Transcription Schemas ---
+
 class TranscriptionRequest(BaseModel):
-    model: str = "whisper-1"
-    language: Optional[str] = None
-    prompt: Optional[str] = None
-    temperature: Optional[float] = 0.0
+    """Schema for transcription service request parameters"""
+    model: str = Field(default="whisper-1", description="AI model to use for transcription")
+    language: Optional[str] = Field(default=None, description="Language code if known")
+    prompt: Optional[str] = Field(default=None, description="Optional prompt to guide transcription")
+    temperature: Optional[float] = Field(default=0.0, description="Model temperature parameter")
+
 
 class TranscriptionResponse(BaseModel):
+    """Schema for transcription service response"""
     text: str
     duration: Optional[float] = None
     language: Optional[str] = None
     model_used: str
 
+
+# --- Analysis Schemas ---
+
 class KeywordExtractionResponse(BaseModel):
+    """Schema for keyword extraction from transcription"""
     keywords: List[str]
 
+
 class SentimentAnalysisResponse(BaseModel):
+    """Schema for sentiment analysis of transcription"""
     sentiment: str
     confidence: float
     emotions: Optional[List[str]] = None
     explanation: Optional[str] = None
 
+
 class InterviewAnalysisQuestionResponse(BaseModel):
+    """Schema for analysis of a single question response"""
     question: str
     response_quality: str
     comments: str
 
-class InterviewAnalysisResponse(BaseModel):
-    key_insights: List[str]
-    strengths: List[str]
-    weaknesses: List[str]
+
+class InterviewAnalysisResponse(AnalysisBase):
+    """Schema for basic interview analysis"""
     question_responses: Optional[List[InterviewAnalysisQuestionResponse]] = None
-    overall_assessment: str
+
 
 class AnalysisScores(BaseModel):
     """Schema for the scoring components of an interview analysis"""
@@ -86,12 +113,23 @@ class AnalysisScores(BaseModel):
     practical_application: float
     overall_score: float
 
-class EnhancedInterviewAnalysisResponse(BaseModel):
+
+class EnhancedInterviewAnalysisResponse(AnalysisBase):
     """Enhanced schema for interview analysis with detailed scoring"""
-    key_insights: List[str]
-    strengths: List[str]
-    weaknesses: List[str]
     scores: AnalysisScores
     response_quality: str
-    overall_assessment: str
     improvement_suggestions: Optional[List[str]] = None
+
+
+class RecordingDetails(BaseModel):
+    """Schema for detailed session recording information used in results endpoints"""
+    session_id: int
+    candidate_name: Optional[str] = None
+    recordings: List[RecordingResponse]
+    start_time: datetime
+    end_time: Optional[datetime] = None
+    total_questions: int
+    completed_questions: int
+    
+    class Config:
+        from_attributes = True

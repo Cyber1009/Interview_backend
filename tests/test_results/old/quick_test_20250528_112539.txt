@@ -1,0 +1,63 @@
+QUICK VIDEO ANALYSIS TEST RESULTS
+==================================================
+Date: 2025-05-28 11:25:39
+Video File: Example Video - Introduction Video for Applications.mp4
+File Size: 0.94 MB
+Transcript Length: 516 characters
+
+TRANSCRIPTION RESULTS
+------------------------------
+Backend: local_whisper
+Language: en
+Model: whisper-small
+
+FULL TRANSCRIPT
+------------------------------
+ Hello, my name's Kate. Thank you for clicking on to the video to get to know me a little bit better. I guess what I wanted to say to you today was one of the reasons that drove me to apply to your organisation rather than some others, I really liked on your web page that you have some great core values which I feel are aligned with myself and not only that but behind those core values you're doing a lot of work in helping the community and that's the sort of company I would like to be involved with. Thank you.
+
+HIRING ANALYSIS RESULTS
+------------------------------
+Overall Score: 7/10
+Hiring Recommendation: hire
+Confidence Level: medium
+
+Key Competencies:
+  - Technical Skills: fair
+  - Communication: good
+  - Problem Solving: good
+  - Cultural Fit: excellent
+
+Positive Signals:
+  • Alignment with company values and community involvement
+
+Hiring Manager Summary:
+The candidate, Kate, demonstrated good communication skills and showed strong alignment with the company's cultural values and community involvement initiatives. While lacking in specific examples, Kate's overall enthusiasm and values alignment make her a promising hire. Further exploration into her technical skills and specific experiences would be beneficial.
+
+RAW ANALYSIS DATA
+------------------------------
+{
+  "overall_score": 7,
+  "hiring_recommendation": "hire",
+  "confidence_level": "medium",
+  "key_competencies": {
+    "technical_skills": "fair",
+    "communication": "good",
+    "problem_solving": "good",
+    "cultural_fit": "excellent"
+  },
+  "hiring_indicators": {
+    "positive_signals": [
+      "Alignment with company values and community involvement"
+    ],
+    "red_flags": [],
+    "neutral_observations": [
+      "Lack of specific examples or experiences mentioned"
+    ]
+  },
+  "interviewer_action_items": [
+    "Probe deeper into specific experiences related to community involvement",
+    "Assess technical skills more thoroughly",
+    "Clarify how candidate's values align with the company's core values"
+  ],
+  "summary_for_hiring_manager": "The candidate, Kate, demonstrated good communication skills and showed strong alignment with the company's cultural values and community involvement initiatives. While lacking in specific examples, Kate's overall enthusiasm and values alignment make her a promising hire. Further exploration into her technical skills and specific experiences would be beneficial."
+}

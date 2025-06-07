@@ -1,12 +1,12 @@
 """
 Payments domain package.
-Contains endpoints for payment processing, checkout, and subscription management.
+Contains endpoints for payment processing, subscriptions, and webhook handling.
 """
 
-from app.api.endpoints.payments.checkout import checkout_router
-from app.api.endpoints.payments.webhook import webhook_router
+from app.api.endpoints.payments.subscription import payment_router
+from app.api.endpoints.payments.payment_router import router
 
 __all__ = [
-    "checkout_router",
-    "webhook_router",
+    "payment_router",           # Main router for all payment operations
+    "router"                    # Alias for payment_router (for backward compatibility)
 ]

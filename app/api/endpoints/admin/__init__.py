@@ -1,13 +1,16 @@
 """
-Admin domain package.
-Contains endpoints for system administration and account management.
+Admin endpoints package.
+Provides administration functionality including user management, system settings, and monitoring.
 """
+from fastapi import APIRouter
 
-from .admin import admin_router, get_admin_auth
-from .accounts import accounts_router
+# Import directly from the admin.py file
+from app.api.endpoints.admin.admin import router as admin_router
 
-__all__ = [
-    "admin_router",
-    "accounts_router",
-    "get_admin_auth",
-]
+# Create combined router
+router = APIRouter()
+
+# Include the consolidated admin endpoints with appropriate prefix
+router.include_router(admin_router, prefix="")
+
+__all__ = ["router"]

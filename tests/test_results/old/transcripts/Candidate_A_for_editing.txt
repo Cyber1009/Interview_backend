@@ -1,0 +1,117 @@
+=== Candidate_A TRANSCRIPTS FOR MANUAL EDITING ===
+
+INSTRUCTIONS:
+1. For each video below, separate the QUESTION and ANSWER
+2. Use the SEGMENTS timing to help identify where question ends and answer begins
+3. Edit the text between the markers
+4. Save this file when done
+5. Run the conversion script to create the JSON file
+
+================================================================================
+
+VIDEO: AQ1.mp4
+FULL TRANSCRIPT:
+ Yeah, we've been really looking forward to meeting you. We've taken a good look at your resume, and we're really impressed with your experiences and logistics. Yes, I've had experience working with similar companies, some of them in the area, but all of them involved with logistics.
+
+SEGMENTS (for reference):
+[0.0s - 2.3s]: Yeah, we've been really looking forward to meeting you.
+[2.3s - 3.8s]: We've taken a good look at your resume,
+[3.8s - 5.4s]: and we're really impressed with your experiences
+[5.4s - 6.6s]: and logistics.
+
+//QA
+
+[6.6s - 9.2s]: Yes, I've had experience working with similar companies,
+[9.2s - 11.1s]: some of them in the area, but all of them
+[11.1s - 13.2s]: involved with logistics.
+
+--- EDIT BELOW THIS LINE ---
+QUESTION_AQ1.mp4: 
+ANSWER_AQ1.mp4: 
+--- EDIT ABOVE THIS LINE ---
+
+============================================================
+
+VIDEO: AQ2.mp4
+FULL TRANSCRIPT:
+ And would you be interested in upgrading the skills you currently have as they relate to the programs mentioned in our job ad? Well, I chose to stay at home and raise my three children until they were of school age, but I'd look forward to any upgrading that's available, and I could even fit in some online courses on the weekends. Sure. I know that my work in AS 400 is still current, but I look forward to updating what I've done in ERP applications.
+
+SEGMENTS (for reference):
+[0.0s - 5.0s]: And would you be interested in upgrading the skills you currently have as they relate to the programs mentioned in our job ad?
+
+//QA
+
+[5.0s - 9.0s]: Well, I chose to stay at home and raise my three children until they were of school age,
+[9.0s - 14.0s]: but I'd look forward to any upgrading that's available, and I could even fit in some online courses on the weekends.
+[14.0s - 15.0s]: Sure.
+[15.0s - 20.0s]: I know that my work in AS 400 is still current, but I look forward to updating what I've done in ERP applications.
+
+--- EDIT BELOW THIS LINE ---
+QUESTION_AQ2.mp4: 
+ANSWER_AQ2.mp4: 
+--- EDIT ABOVE THIS LINE ---
+
+============================================================
+
+VIDEO: AQ3.mp4
+FULL TRANSCRIPT:
+ Do you find that working with others comes easily to you or do you prefer to work on your own? Because I've always worked with smaller companies, I've often been pretty much on my own, but I'd welcome the chance to be a part of a team approach as I think I have plenty of experience that others would find valuable.
+
+SEGMENTS (for reference):
+[0.0s - 4.0s]: Do you find that working with others comes easily to you or do you prefer to work on your own?
+
+//QA
+
+[4.0s - 9.0s]: Because I've always worked with smaller companies, I've often been pretty much on my own,
+[9.0s - 15.0s]: but I'd welcome the chance to be a part of a team approach as I think I have plenty of experience that others would find valuable.
+
+--- EDIT BELOW THIS LINE ---
+QUESTION_AQ3.mp4: 
+ANSWER_AQ3.mp4: 
+--- EDIT ABOVE THIS LINE ---
+
+============================================================
+
+VIDEO: AQ4.mp4
+FULL TRANSCRIPT:
+ And would you say that you've taken the lead on team projects in the past? If so, could you provide us with a few examples? Well, I haven't had the opportunity to work with teams in logistics. I've often worked with management to resolve problems with distribution and to allocate work among our employees in order to maintain peak productivity.
+
+SEGMENTS (for reference):
+[0.0s - 3.5s]: And would you say that you've taken the lead on team projects in the past?
+[3.5s - 6.0s]: If so, could you provide us with a few examples?
+
+//QA
+
+
+[6.0s - 10.0s]: Well, I haven't had the opportunity to work with teams in logistics.
+[10.0s - 13.5s]: I've often worked with management to resolve problems with distribution
+[13.5s - 17.5s]: and to allocate work among our employees in order to maintain peak productivity.
+
+--- EDIT BELOW THIS LINE ---
+QUESTION_AQ4.mp4: 
+ANSWER_AQ4.mp4: 
+--- EDIT ABOVE THIS LINE ---
+
+============================================================
+
+VIDEO: AQ5.mp4
+FULL TRANSCRIPT:
+ So those are the main questions that we have for you, but do you have any questions for us, Barbara? I understand that this is a contract position, but are there chances that it could evolve into full-time work? I'm ready to return to the workforce and take on long-term work. My youngest is in JK, but we've arranged to cover all of our child care needs.
+
+SEGMENTS (for reference):
+[0.0s - 3.4s]: So those are the main questions that we have for you, but do you have any questions for us, Barbara?
+
+
+//QA
+
+[4.6s - 9.3s]: I understand that this is a contract position, but are there chances that it could evolve into
+[9.3s - 14.5s]: full-time work? I'm ready to return to the workforce and take on long-term work. My youngest is in JK,
+[14.5s - 17.0s]: but we've arranged to cover all of our child care needs.
+
+--- EDIT BELOW THIS LINE ---
+QUESTION_AQ5.mp4: 
+ANSWER_AQ5.mp4: 
+--- EDIT ABOVE THIS LINE ---
+
+============================================================
+

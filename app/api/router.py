@@ -4,55 +4,41 @@ Organizes all endpoints into a cohesive API with clear domain separation by user
 """
 from fastapi import APIRouter
 
-# Import routers from interviewer domain
-from app.api.endpoints.interviewer.interviews import interviews_router
-from app.api.endpoints.interviewer.questions import questions_router
-from app.api.endpoints.interviewer.tokens import tokens_router
-from app.api.endpoints.interviewer.results import results_router
-from app.api.endpoints.interviewer.theme import theme_router
-
-# Import routers from auth domain
+# Import consolidated router from interviewer domain
+from app.api.endpoints.interviewer import router as interviewer_router
+# Import authentication and registration routers from auth domain
 from app.api.endpoints.auth.auth import auth_router
 from app.api.endpoints.auth.registration import registration_router
 
-# Import routers from candidates domain
-from app.api.endpoints.candidates.candidates import candidates_router
+# Import consolidated router from admin domain
+from app.api.endpoints.admin import router as admin_router
 
-# Import routers from admin domain
-from app.api.endpoints.admin.admin import admin_router
-from app.api.endpoints.admin.accounts import accounts_router
+# Import consolidated router from candidates domain
+from app.api.endpoints.candidates import router as candidates_router
 
-# Import routers from payments domain
-from app.api.endpoints.payments.checkout import checkout_router
-from app.api.endpoints.payments.webhook import webhook_router
-
-# Import router from system domain
-from app.api.endpoints.system import system_router
+# Import consolidated router from payments domain
+from app.api.endpoints.payments.payment_router import router as payment_router
 
 # Create the main API router
 api_router = APIRouter()
 
-# Authentication domain
-api_router.include_router(auth_router, prefix="/auth", tags=["Authentication"])
-api_router.include_router(registration_router, prefix="/auth/registration", tags=["Authentication"])
+# =========================================================
+# RESTRUCTURED ENDPOINT ORGANIZATION FOR BETTER SWAGGER UI
+# =========================================================
 
-# Interviewer domain - RESTful resource-based organization
-api_router.include_router(interviews_router, prefix="/interviewer/interviews", tags=["Interviewer"])
-api_router.include_router(questions_router, prefix="/interviewer/interviews", tags=["Interviewer"])
-api_router.include_router(tokens_router, prefix="/interviewer/interviews", tags=["Interviewer"])
-api_router.include_router(results_router, prefix="/interviewer/results", tags=["Interviewer"])
-api_router.include_router(theme_router, prefix="/interviewer/profile/theme", tags=["Interviewer"])
+# User Authentication tag - login, registration
+api_router.include_router(auth_router, prefix="/auth", tags=["User"])
+api_router.include_router(registration_router, prefix="/auth/registration", tags=["User"])
 
-# Candidate domain - for interview participants
-api_router.include_router(candidates_router, prefix="/candidates", tags=["Candidates"])
+# Interviewer Panel tag - use consolidated interviewer router (includes bulk operations)
+api_router.include_router(interviewer_router, prefix="/interviewer", tags=["Interviewer Panel"])
 
-# Payment and subscription domain
-api_router.include_router(checkout_router, prefix="/payments/checkout", tags=["Payments"])
-api_router.include_router(webhook_router, prefix="/payments/webhook", tags=["Payments"])
+# Candidate Portal tag - all candidate-facing functionality with simplified paths
+# Note: Batch processing for candidates is now included within the candidates router
+api_router.include_router(candidates_router, prefix="/candidates", tags=["Candidate Portal"])
 
-# Admin domain - clearly separated but with unified tag
-api_router.include_router(admin_router, prefix="/admin/system", tags=["Administration"])
-api_router.include_router(accounts_router, prefix="/admin/users", tags=["Administration"])
+# Admin endpoints - use consolidated admin router
+api_router.include_router(admin_router, prefix="/admin", tags=["Admin"])
 
-# System domain - health checks and monitoring
-api_router.include_router(system_router, prefix="/system", tags=["System"])
+# Billing and Subscriptions tag - consolidated payment endpoints
+api_router.include_router(payment_router, prefix="/billing", tags=["Billing"])

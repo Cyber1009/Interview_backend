@@ -19,7 +19,7 @@ The platform follows a self-service registration flow with built-in payment proc
    - Creates a pending account with a verification token
    - No payment required at this step
 
-2. **Subscription Selection** (`POST /api/auth/registration/checkout/{plan_id}`)
+2. **Subscription Selection** (`POST /api/billing/registration/{plan_id}`)
    - User selects a subscription plan (basic, premium, enterprise)
    - Creates a Stripe checkout session
    - Returns a checkout URL for payment processing
@@ -28,14 +28,14 @@ The platform follows a self-service registration flow with built-in payment proc
    - User completes payment on the Stripe-hosted checkout page
    - Stripe redirects to success URL with session ID
 
-4. **Account Activation** (`POST /api/auth/registration/complete`)
+4. **Account Activation** (`POST /api/billing/registration/complete`)
    - Verifies payment was successful
    - Creates active user account with subscription details
    - Removes pending account
 
 After registration and activation, users can manage their subscriptions through:
-- Customer portal access (`POST /api/payments/checkout/customer-portal`)
-- Subscription reactivation (`POST /api/payments/checkout/reactivate-subscription/{plan_id}`)
+- Customer portal access (`POST /api/billing/customer-portal`)
+- Subscription reactivation (`POST /api/billing/reactivate-subscription/{plan_id}`)
 
 ## Subscription Features
 
@@ -141,3 +141,4 @@ heroku config:set FRONTEND_URL=https://your-frontend-app.com
 heroku config:set DEV_MODE=False
 git push heroku main
 ```
+````

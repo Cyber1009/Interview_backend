@@ -1,0 +1,552 @@
+{
+  "session_id": 1,
+  "candidate_id": "test_candidate_001",
+  "analyzed_at": "2025-06-06T20:56:47.324946+00:00",
+  "session_metrics": {
+    "total_questions": 4,
+    "total_words": 152,
+    "total_duration": 0,
+    "average_speaking_rate": 0,
+    "average_response_length": 38.0
+  },
+  "structured_analysis": {
+    "overall_score": 4,
+    "hiring_recommendation": "requires_review",
+    "confidence_level": "medium",
+    "scores": {
+      "communication_skills": 5,
+      "technical_knowledge": 4,
+      "problem_solving": 3,
+      "cultural_fit": 5,
+      "experience_relevance": 5
+    },
+    "assessment": {
+      "strengths": [
+        "Willingness to upgrade skills",
+        "Self-sufficiency in task completion"
+      ],
+      "weaknesses": [
+        "Limited teamwork experience",
+        "Potential scheduling conflicts due to personal commitments"
+      ],
+      "communication_quality": "fair",
+      "response_depth": "poor",
+      "technical_accuracy": "fair"
+    },
+    "key_insights": [
+      "The candidate is open to skill development but has time constraints.",
+      "Prefers to work independently, which may be a concern for collaborative projects.",
+      "Lacks experience in leadership roles within team settings.",
+      "Expressed personal concerns, indicating a focus on work-life balance."
+    ],
+    "evidence_examples": [
+      {
+        "question_number": 1,
+        "observation": "Candidate is willing to learn but has limited availability.",
+        "evidence": "I could try to take weekend courses when the kids are with their father.",
+        "impact": "neutral"
+      },
+      {
+        "question_number": 2,
+        "observation": "Candidate prefers working alone.",
+        "evidence": "Most often I'm better on my own because I can set my own pace...",
+        "impact": "negative"
+      },
+      {
+        "question_number": 3,
+        "observation": "Candidate has not taken the lead on team projects.",
+        "evidence": "I've just worked in small offices in the past, so mostly I've just been given tasks and done them on my own...",
+        "impact": "negative"
+      },
+      {
+        "question_number": 4,
+        "observation": "Candidate is concerned about benefits, indicating personal priorities.",
+        "evidence": "Well, I'm always worried about things like benefits.",
+        "impact": "neutral"
+      }
+    ],
+    "recommendations": {
+      "next_steps": "Further evaluate the candidate's ability to work in team settings and lead projects. Assess the potential impact of personal commitments on job performance.",
+      "focus_areas": [
+        "Teamwork and collaboration",
+        "Leadership potential",
+        "Time management"
+      ],
+      "additional_evaluation": "yes",
+      "role_suitability": "medium"
+    },
+    "follow_up_questions": [
+      "Can you provide an example of a situation where you had to collaborate with a team, even if informally?",
+      "How do you handle situations where teamwork is unavoidable?",
+      "Are there specific times when you are unavailable due to personal commitments?",
+      "How do you prioritize your tasks when faced with tight deadlines and multiple responsibilities?"
+    ]
+  },
+  "question_responses": [
+    {
+      "question_id": 1,
+      "question_text": "Would you be interested in upgrading the skills you currently have as they relate to the programs mentioned in our job ad?",
+      "question_category": "general",
+      "transcript": " Well, with three kids, there's never enough time, but I could manage some work if I get the work. I could try to take weekend courses when the kids are with their father. I know that my work in AS 400 is still current, but I could likely update what I've done in ERP applications.",
+      "word_count": 55,
+      "duration": 0,
+      "speaking_rate": 0,
+      "segments": [
+        {
+          "id": 0,
+          "seek": 0,
+          "start": 0.0,
+          "end": 6.5600000000000005,
+          "text": " Well, with three kids, there's never enough time, but I could manage some work if I get the work.",
+          "tokens": [
+            50364,
+            1042,
+            11,
+            365,
+            1045,
+            2301,
+            11,
+            456,
+            311,
+            1128,
+            1547,
+            565,
+            11,
+            457,
+            286,
+            727,
+            3067,
+            512,
+            589,
+            498,
+            286,
+            483,
+            264,
+            589,
+            13,
+            50692
+          ],
+          "temperature": 0.0,
+          "avg_logprob": -0.22043927510579428,
+          "compression_ratio": 1.4736842105263157,
+          "no_speech_prob": 0.024602854624390602
+        },
+        {
+          "id": 1,
+          "seek": 0,
+          "start": 6.5600000000000005,
+          "end": 10.4,
+          "text": " I could try to take weekend courses when the kids are with their father.",
+          "tokens": [
+            50692,
+            286,
+            727,
+            853,
+            281,
+            747,
+            6711,
+            7712,
+            562,
+            264,
+            2301,
+            366,
+            365,
+            641,
+            3086,
+            13,
+            50884
+          ],
+          "temperature": 0.0,
+          "avg_logprob": -0.22043927510579428,
+          "compression_ratio": 1.4736842105263157,
+          "no_speech_prob": 0.024602854624390602
+        },
+        {
+          "id": 2,
+          "seek": 0,
+          "start": 10.4,
+          "end": 17.400000000000002,
+          "text": " I know that my work in AS 400 is still current, but I could likely update what I've done in ERP applications.",
+          "tokens": [
+            50884,
+            286,
+            458,
+            300,
+            452,
+            589,
+            294,
+            7469,
+            8423,
+            307,
+            920,
+            2190,
+            11,
+            457,
+            286,
+            727,
+            3700,
+            5623,
+            437,
+            286,
+            600,
+            1096,
+            294,
+            14929,
+            47,
+            5821,
+            13,
+            51234
+          ],
+          "temperature": 0.0,
+          "avg_logprob": -0.22043927510579428,
+          "compression_ratio": 1.4736842105263157,
+          "no_speech_prob": 0.024602854624390602
+        }
+      ],
+      "pause_analysis": {
+        "total_pauses": 0,
+        "average_pause_duration": 0,
+        "longest_pause": 0,
+        "speaking_segments": 3,
+        "average_segment_duration": 5.800000000000001,
+        "speech_continuity_score": 10
+      },
+      "recording_id": 1
+    },
+    {
+      "question_id": 2,
+      "question_text": "Do you find that working with others comes easily to you or do you prefer to work on your own?",
+      "question_category": "general",
+      "transcript": " Most often I'm better on my own because I can set my own pace and try to meet deadlines that way without relying on others who sometimes don't make the effort.",
+      "word_count": 31,
+      "duration": 0,
+      "speaking_rate": 0,
+      "segments": [
+        {
+          "id": 0,
+          "seek": 0,
+          "start": 0.0,
+          "end": 5.14,
+          "text": " Most often I'm better on my own because I can set my own pace and try to meet",
+          "tokens": [
+            50364,
+            4534,
+            2049,
+            286,
+            478,
+            1101,
+            322,
+            452,
+            1065,
+            570,
+            286,
+            393,
+            992,
+            452,
+            1065,
+            11638,
+            293,
+            853,
+            281,
+            1677,
+            50621
+          ],
+          "temperature": 0.0,
+          "avg_logprob": -0.23934290959284857,
+          "compression_ratio": 1.325,
+          "no_speech_prob": 0.08504044264554977
+        },
+        {
+          "id": 1,
+          "seek": 0,
+          "start": 5.14,
+          "end": 9.28,
+          "text": " deadlines that way without relying on others who sometimes don't make the effort.",
+          "tokens": [
+            50621,
+            37548,
+            300,
+            636,
+            1553,
+            24140,
+            322,
+            2357,
+            567,
+            2171,
+            500,
+            380,
+            652,
+            264,
+            4630,
+            13,
+            50828
+          ],
+          "temperature": 0.0,
+          "avg_logprob": -0.23934290959284857,
+          "compression_ratio": 1.325,
+          "no_speech_prob": 0.08504044264554977
+        }
+      ],
+      "pause_analysis": {
+        "total_pauses": 0,
+        "average_pause_duration": 0,
+        "longest_pause": 0,
+        "speaking_segments": 2,
+        "average_segment_duration": 4.64,
+        "speech_continuity_score": 10
+      },
+      "recording_id": 2
+    },
+    {
+      "question_id": 3,
+      "question_text": "And would you say that you've taken the lead on team projects in the past? If so, could you provide us with a few examples?",
+      "question_category": "general",
+      "transcript": " I've just worked in small offices in the past, so mostly I've just been given tasks and done them on my own without having to bother working with others. It's just faster that way.",
+      "word_count": 34,
+      "duration": 0,
+      "speaking_rate": 0,
+      "segments": [
+        {
+          "id": 0,
+          "seek": 0,
+          "start": 0.0,
+          "end": 5.5600000000000005,
+          "text": " I've just worked in small offices in the past, so mostly I've just been given",
+          "tokens": [
+            50364,
+            286,
+            600,
+            445,
+            2732,
+            294,
+            1359,
+            14434,
+            294,
+            264,
+            1791,
+            11,
+            370,
+            5240,
+            286,
+            600,
+            445,
+            668,
+            2212,
+            50642
+          ],
+          "temperature": 0.0,
+          "avg_logprob": -0.23402861331371552,
+          "compression_ratio": 1.3846153846153846,
+          "no_speech_prob": 0.04820816591382027
+        },
+        {
+          "id": 1,
+          "seek": 0,
+          "start": 5.5600000000000005,
+          "end": 10.1,
+          "text": " tasks and done them on my own without having to bother working with others. It's",
+          "tokens": [
+            50642,
+            9608,
+            293,
+            1096,
+            552,
+            322,
+            452,
+            1065,
+            1553,
+            1419,
+            281,
+            8677,
+            1364,
+            365,
+            2357,
+            13,
+            467,
+            311,
+            50869
+          ],
+          "temperature": 0.0,
+          "avg_logprob": -0.23402861331371552,
+          "compression_ratio": 1.3846153846153846,
+          "no_speech_prob": 0.04820816591382027
+        },
+        {
+          "id": 2,
+          "seek": 0,
+          "start": 10.1,
+          "end": 12.72,
+          "text": " just faster that way.",
+          "tokens": [
+            50869,
+            445,
+            4663,
+            300,
+            636,
+            13,
+            51000
+          ],
+          "temperature": 0.0,
+          "avg_logprob": -0.23402861331371552,
+          "compression_ratio": 1.3846153846153846,
+          "no_speech_prob": 0.04820816591382027
+        }
+      ],
+      "pause_analysis": {
+        "total_pauses": 0,
+        "average_pause_duration": 0,
+        "longest_pause": 0,
+        "speaking_segments": 3,
+        "average_segment_duration": 4.24,
+        "speech_continuity_score": 10
+      },
+      "recording_id": 3
+    },
+    {
+      "question_id": 4,
+      "question_text": "So those are the main questions that we have for you, but do you have any questions for us?",
+      "question_category": "general",
+      "transcript": " Well, I'm always worried about things like benefits. I'm guessing you have a dental plan. Does it cover braces? My son is going to need them in the next year or so.",
+      "word_count": 32,
+      "duration": 0,
+      "speaking_rate": 0,
+      "segments": [
+        {
+          "id": 0,
+          "seek": 0,
+          "start": 0.0,
+          "end": 3.52,
+          "text": " Well, I'm always worried about things like benefits.",
+          "tokens": [
+            50364,
+            1042,
+            11,
+            286,
+            478,
+            1009,
+            5804,
+            466,
+            721,
+            411,
+            5311,
+            13,
+            50540
+          ],
+          "temperature": 0.0,
+          "avg_logprob": -0.21808602412541708,
+          "compression_ratio": 1.251908396946565,
+          "no_speech_prob": 0.05005881190299988
+        },
+        {
+          "id": 1,
+          "seek": 0,
+          "start": 3.52,
+          "end": 5.92,
+          "text": " I'm guessing you have a dental plan.",
+          "tokens": [
+            50540,
+            286,
+            478,
+            17939,
+            291,
+            362,
+            257,
+            24473,
+            1393,
+            13,
+            50660
+          ],
+          "temperature": 0.0,
+          "avg_logprob": -0.21808602412541708,
+          "compression_ratio": 1.251908396946565,
+          "no_speech_prob": 0.05005881190299988
+        },
+        {
+          "id": 2,
+          "seek": 0,
+          "start": 5.92,
+          "end": 7.2,
+          "text": " Does it cover braces?",
+          "tokens": [
+            50660,
+            4402,
+            309,
+            2060,
+            41537,
+            30,
+            50724
+          ],
+          "temperature": 0.0,
+          "avg_logprob": -0.21808602412541708,
+          "compression_ratio": 1.251908396946565,
+          "no_speech_prob": 0.05005881190299988
+        },
+        {
+          "id": 3,
+          "seek": 0,
+          "start": 7.2,
+          "end": 9.84,
+          "text": " My son is going to need them in the next year or so.",
+          "tokens": [
+            50724,
+            1222,
+            1872,
+            307,
+            516,
+            281,
+            643,
+            552,
+            294,
+            264,
+            958,
+            1064,
+            420,
+            370,
+            13,
+            50856
+          ],
+          "temperature": 0.0,
+          "avg_logprob": -0.21808602412541708,
+          "compression_ratio": 1.251908396946565,
+          "no_speech_prob": 0.05005881190299988
+        }
+      ],
+      "pause_analysis": {
+        "total_pauses": 0,
+        "average_pause_duration": 0,
+        "longest_pause": 0,
+        "speaking_segments": 4,
+        "average_segment_duration": 2.46,
+        "speech_continuity_score": 10
+      },
+      "recording_id": 4
+    }
+  ],
+  "recommendations": {
+    "hiring_recommendation": "requires_review",
+    "confidence_level": "medium",
+    "key_strengths": [],
+    "areas_for_improvement": [],
+    "follow_up_questions": [
+      "Can you provide an example of a situation where you had to collaborate with a team, even if informally?",
+      "How do you handle situations where teamwork is unavoidable?",
+      "Are there specific times when you are unavailable due to personal commitments?",
+      "How do you prioritize your tasks when faced with tight deadlines and multiple responsibilities?"
+    ]
+  },
+  "analysis_metadata": {
+    "model_used": "gpt-4-1106-preview",
+    "openai_usage": {
+      "prompt_tokens": 1128,
+      "completion_tokens": 608,
+      "total_tokens": 1736,
+      "estimated_cost": 0.0295
+    },
+    "analysis_version": "2.0",
+    "features_used": [
+      "timing_analysis",
+      "structured_scoring",
+      "hiring_recommendation"
+    ]
+  }
+}

@@ -1,12 +1,28 @@
 """
 Payment and subscription related schemas.
 """
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
 from datetime import datetime
 
-# Webhook Event Schema
+from app.schemas.base_schemas import (
+    UserBase,
+    SubscriptionBase,
+    EntityBase,
+    VerificationBase
+)
+
+# --- Subscription Time Schemas ---
+
+class SubscriptionTimeBase(BaseModel):
+    """Base schema for subscription time information"""
+    subscription_end_date: datetime
+
+
+# --- Webhook Event Schemas ---
+
 class WebhookEvent(BaseModel):
+    """Schema for incoming webhook events from payment provider"""
     id: str
     type: str
     data: Dict[str, Any]
@@ -22,27 +38,36 @@ class WebhookEvent(BaseModel):
             }
         }
 
-# Registration and Payment Flow Schemas
-class UserRegistration(BaseModel):
-    username: str
-    password: str
-    email: str
-    company_name: Optional[str] = None
 
-class RegistrationCheckout(BaseModel):
-    verification_token: str
+# --- Registration and Payment Flow Schemas ---
+
+class RegistrationCheckout(VerificationBase):
+    """Schema for initiating checkout during registration"""
     plan_id: str
 
-class RegistrationComplete(BaseModel):
-    verification_token: str
+
+class RegistrationComplete(VerificationBase):
+    """Schema for completing registration after checkout"""
     session_id: str
 
-class StripeCheckoutResponse(BaseModel):
+
+# --- Checkout Response Schemas ---
+
+class CheckoutSession(BaseModel):
+    """Schema for checkout session response"""
     checkout_url: str
     session_id: str
 
-# Subscription Management Schemas
+
+class CustomerPortalSession(BaseModel):
+    """Schema for customer portal session"""
+    portal_url: str
+
+
+# --- Subscription Management Schemas ---
+
 class SubscriptionCreate(BaseModel):
+    """Schema for creating a new subscription"""
     user_id: int
     subscription_id: str
     subscription_end_date: datetime
@@ -56,8 +81,9 @@ class SubscriptionCreate(BaseModel):
             }
         }
 
-class SubscriptionUpdate(BaseModel):
-    subscription_end_date: datetime
+
+class SubscriptionUpdate(SubscriptionTimeBase):
+    """Schema for updating an existing subscription"""
     is_active: bool = True
     subscription_plan: Optional[str] = None
     
@@ -70,19 +96,23 @@ class SubscriptionUpdate(BaseModel):
             }
         }
 
-class SubscriptionResponse(BaseModel):
+
+class SubscriptionResponse(SubscriptionTimeBase):
+    """Schema for subscription details response"""
     user_id: int
     username: str
-    company_name: Optional[str] = None
+    company: Optional[str] = None
     subscription_id: str
-    subscription_end_date: datetime
     is_active: bool
     
     class Config:
         from_attributes = True
 
-# Subscription & Payment Schemas
+
+# --- Subscription Plan Schemas ---
+
 class SubscriptionInfo(BaseModel):
+    """Schema for current user subscription info"""
     plan_id: str
     plan_name: str
     active: bool
@@ -92,21 +122,18 @@ class SubscriptionInfo(BaseModel):
     class Config:
         from_attributes = True
 
-class CheckoutSession(BaseModel):
-    checkout_url: str
-    session_id: str
 
-class CustomerPortalSession(BaseModel):
-    portal_url: str
-
-class SubscriptionPlan(BaseModel):
+class SubscriptionPlanFeatures(BaseModel):
+    """Base schema for subscription plan features"""
     name: str
     price_id: str
-    duration: Optional[str] = "monthly"
-    duration_days: Optional[int] = 30
+    duration: str = "monthly"
+    duration_days: int = 30
     features: List[str]
 
+
 class SubscriptionPlanList(BaseModel):
-    basic: SubscriptionPlan
-    premium: SubscriptionPlan
-    enterprise: SubscriptionPlan
+    """Schema for listing all available subscription plans"""
+    basic: SubscriptionPlanFeatures
+    premium: SubscriptionPlanFeatures
+    enterprise: SubscriptionPlanFeatures

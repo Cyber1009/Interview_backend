@@ -13,11 +13,12 @@ import hashlib
 import hmac
 from typing import Union, Dict, Any
 
-from app.api.deps import db_dependency
+from app.api.dependencies import db_dependency
 from app.schemas.payment_schemas import WebhookEvent
 from app.core.config import settings
 from app.core.database.models import User
-from app.utils.error_utils import bad_request, internal_error
+from app.api.exceptions import bad_request, internal_error
+from app.utils.subscription_utils import get_subscription_end_date, process_registration_completion
 
 # Create router
 webhook_router = APIRouter()
@@ -290,66 +291,40 @@ async def handle_checkout_completion(db: Session, checkout_session):
             logger.warning("Missing plan_id in registration checkout metadata")
             return
         
-        # Check if a user already exists with this token (already processed)
-        from app.core.database.models import PendingAccount
-        pending_account = db.query(PendingAccount).filter(
-            PendingAccount.verification_token == verification_token
-        ).first()
-        
-        if not pending_account:
-            logger.info(f"No pending account found for token {verification_token} - possibly already processed")
-            return
-            
         logger.info(f"Processing registration checkout completion for token {verification_token}")
             
-        # Process registration completion
-        from app.core.database.models import User
-        
         # Set subscription details
         subscription_id = get_value_safely(checkout_session, "subscription")
         customer_id = get_value_safely(checkout_session, "customer")
         
-        # Default subscription duration
-        from app.api.endpoints.payments.checkout import SUBSCRIPTION_PLANS
-        plan_duration_days = 30  # Default to monthly
-        if plan_id in SUBSCRIPTION_PLANS and "duration_days" in SUBSCRIPTION_PLANS[plan_id]:
-            plan_duration_days = SUBSCRIPTION_PLANS[plan_id]["duration_days"]
-            
-        subscription_end_date = datetime.now(timezone.utc) + timedelta(days=plan_duration_days)
-            
-        # Try to get subscription details from Stripe if available
+        # Get subscription end date and status
         subscription_status = "active"
         if subscription_id:
             try:
                 subscription = stripe.Subscription.retrieve(subscription_id)
                 if hasattr(subscription, 'status'):
                     subscription_status = subscription.status
-                if hasattr(subscription, 'current_period_end'):
-                    end_timestamp = subscription.current_period_end
-                    subscription_end_date = datetime.fromtimestamp(end_timestamp, tz=timezone.utc)
             except Exception as e:
-                logger.warning(f"Could not retrieve subscription details: {e}")
+                logger.warning(f"Could not retrieve subscription status: {e}")
+                
+        # Get subscription end date using utility function
+        subscription_end_date, _ = get_subscription_end_date(subscription_id, plan_id)
         
-        # Create active user from pending account
-        new_user = User(
-            username=pending_account.username,
-            hashed_password=pending_account.hashed_password,
-            email=pending_account.email,
-            company_name=pending_account.company_name,
-            is_active=True,
-            subscription_id=subscription_id,
-            subscription_plan=plan_id,
-            subscription_end_date=subscription_end_date,
-            subscription_status=subscription_status,
-            payment_method_id=customer_id
+        # Process registration completion using utility function
+        user, success = process_registration_completion(
+            db,
+            verification_token,
+            subscription_id,
+            customer_id,
+            plan_id,
+            subscription_status,
+            subscription_end_date
         )
         
-        # Add the user to the database and remove the pending account
-        db.add(new_user)
-        db.delete(pending_account)
-        db.commit()
-        
-        logger.info(f"Successfully completed registration for {new_user.username} from webhook")
+        if success:
+            logger.info(f"Successfully completed registration for {user.username} from webhook")
+        else:
+            logger.warning("Registration completion failed from webhook")
         
     except Exception as e:
         db.rollback()

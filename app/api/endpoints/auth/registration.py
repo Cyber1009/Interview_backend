@@ -14,10 +14,10 @@ from datetime import datetime, timezone, timedelta
 # Updated import path
 from app.core.database.models import PendingAccount, User
 from app.schemas.auth_schemas import RegistrationCreate, RegistrationResponse
-from app.schemas import UserRegistration, RegistrationCheckout, RegistrationComplete, StripeCheckoutResponse
+from app.schemas.payment_schemas import RegistrationCheckout, RegistrationComplete, CheckoutSession
 from app.core.config import settings
-from app.api.deps import db_dependency
-from app.utils.error_utils import not_found, bad_request, payment_error
+from app.api.dependencies import db_dependency
+from app.api.exceptions import not_found, bad_request, payment_error
 from app.core.security.auth import get_password_hash
 
 # Create router

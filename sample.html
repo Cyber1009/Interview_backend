@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel Improved</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #b6c2c9;
+      --card-bg: #fff;
+      --label-bg: #e5eaf1;
+      --label-color: #52606d;
+      --button-bg: #091326;
+      --button-color: #fff;
+      --card-radius: 18px;
+      --shadow: 0 4px 24px 0 rgba(80,86,96,0.10);
+      --search-bg: #f5f7fa;
+      --search-border: #d1d5db;
+      --gap: 2vw;
+      --header-color: #091326;
+    }
+    body {
+      background: var(--bg);
+      font-family: 'Inter', Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      color: #222;
+    }
+    .admin-layout {
+      display: flex;
+      align-items: stretch;
+      height: 100vh;
+      padding: 3vw 2vw;
+      box-sizing: border-box;
+      gap: var(--gap);
+    }
+    .card1 {
+      flex: 0 0 24%;
+      max-width: 340px;
+      min-width: 240px;
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      box-shadow: var(--shadow);
+      padding: 0 1.5rem 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      justify-content: flex-start;
+      box-sizing: border-box;
+      overflow: hidden;
+      height: 100%;
+    }
+    .card1-header {
+      width: calc(100% + 3rem);
+      margin-left: -1.5rem;
+      padding: 1.2rem 1.5rem 0.7rem 1.5rem;
+      border-bottom: 1px solid #e5eaf1;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+    }
+    .card1-title {
+      color: var(--header-color);
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+    .main-cards {
+      flex: 1 1 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap);
+      min-width: 0;
+    }
+    .top-cards {
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap);
+      height: 60%;
+      min-height: 0;
+    }
+    .card2 {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      box-shadow: var(--shadow);
+      padding: 1.3rem 1.5rem;
+      min-height: 0;
+      position: relative;
+      flex: 0 0 12%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      height: 12%;
+      box-sizing: border-box;
+    }
+    .search-bar {
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      align-items: center;
+      background: var(--search-bg);
+      border-radius: 2em;
+      padding: 0.4em 1em;
+      border: 1px solid var(--search-border);
+      box-sizing: border-box;
+      height: 2.4em;
+    }
+    .search-bar input {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 1rem;
+      width: 100%;
+      padding: 0.3em 0.5em;
+      color: #222;
+      height: 1.6em;
+    }
+    .search-bar svg {
+      width: 1.2em;
+      height: 1.2em;
+      color: #8a9198;
+      margin-right: 0.5em;
+    }
+    .card3 {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      box-shadow: var(--shadow);
+      padding: 2rem 1.5rem 1.5rem 1.5rem;
+      min-height: 0;
+      position: relative;
+      flex: 1 1 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+    .card3 .card-label {
+      display: block;
+      position: absolute;
+      top: 2rem;
+      left: 1.5rem;
+    }
+    .user-list {
+      margin-top: 2.5em;
+      overflow-y: auto;
+      flex: 1 1 0;
+      max-height: 320px;
+      padding-right: 0.5em;
+    }
+    .user-row {
+      display: flex;
+      align-items: center;
+      background: #f5f7fa;
+      border-radius: 10px;
+      padding: 0.8em 1em;
+      margin-bottom: 0.7em;
+      gap: 1em;
+      min-width: 0;
+    }
+    .user-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #b6c2c9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: #fff;
+      font-size: 1.1em;
+      flex-shrink: 0;
+    }
+    .user-info {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+    .user-name {
+      font-weight: 600;
+      font-size: 1.05em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .user-role {
+      color: #52606d;
+      font-size: 0.95em;
+    }
+    .user-row .btn {
+      margin-top: 0;
+      margin-right: 0;
+      margin-left: 1em;
+      flex-shrink: 0;
+    }
+    .bottom-cards {
+      display: flex;
+      gap: var(--gap);
+      height: 40%;
+      min-height: 0;
+    }
+    .card4, .card5 {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      box-shadow: var(--shadow);
+      padding: 2rem 1.5rem;
+      flex: 1 1 0;
+      min-width: 0;
+      min-height: 0;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      overflow: hidden;
+      justify-content: flex-start;
+    }
+    .card4 .card-label, .card5 .card-label {
+      display: block;
+      position: absolute;
+      top: 2rem;
+      left: 1.5rem;
+    }
+    .card4-content, .card5-content {
+      margin-top: 3em;
+      flex: 1 1 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      box-sizing: border-box;
+      overflow: hidden;
+      width: 100%;
+    }
+    .card5-content p,
+    .card5-content button {
+      margin: 0;
+      margin-bottom: 0.5em;
+      max-width: 100%;
+      word-break: break-word;
+    }
+    /* Buttons */
+    .btn {
+      background: var(--button-bg);
+      color: var(--button-color);
+      border: none;
+      border-radius: 2em;
+      padding: 0.6em 1.6em;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-right: 0.5em;
+      margin-top: 1em;
+      transition: background 0.2s;
+      box-shadow: 0 2px 8px 0 rgba(9,19,38,0.08);
+      white-space: nowrap;
+    }
+    .btn:hover {
+      background: #1a233a;
+    }
+    /* Responsive */
+    @media (max-width: 1100px) {
+      .admin-layout { flex-direction: column; gap: var(--gap); }
+      .card1 { flex: none; width: 100%; min-width: 0; margin-bottom: var(--gap); max-width: 100%; }
+      .main-cards { width: 100%; }
+      .top-cards, .bottom-cards { flex-direction: column; gap: var(--gap); height: auto; }
+      .card2, .card3, .card4, .card5 { width: 100%; }
+    }
+    @media (max-width: 700px) {
+      .admin-layout { padding: 2vw 1vw; }
+      .card1, .card2, .card3, .card4, .card5 { padding: 1.2rem 0.7rem; }
+      .card1-header { width: calc(100% + 1.4rem); margin-left: -0.7rem; padding: 1.2rem 0.7rem 0.7rem 0.7rem; }
+      .card-label { left: 0.7rem; top: 0.7rem; }
+      .card3 .card-label, .card4 .card-label, .card5 .card-label { top: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Card 1 -->
+    <div class="card1">
+      <div class="card1-header">
+        <span class="card1-title">Overview</span>
+      </div>
+      <div style="margin-top: 2.5em;">
+        <p style="font-size:2.2rem; font-weight:700; margin-bottom:0.2em;">1,234</p>
+        <p style="color:#52606d; font-size:1.1rem;">Active Users</p>
+        <button class="btn">Manage</button>
+      </div>
+    </div>
+    <div class="main-cards">
+      <div class="top-cards" style="flex: 0 0 60%;">
+        <!-- Card 2 -->
+        <div class="card2">
+          <form class="search-bar" autocomplete="off">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" placeholder="Search users, activity..." />
+          </form>
+        </div>
+        <!-- Card 3 -->
+        <div class="card3">
+          <div class="card-label">Recent Users</div>
+          <div class="user-list">
+            <div class="user-row">
+              <div class="user-avatar" style="background:#52606d;">JD</div>
+              <div class="user-info">
+                <div class="user-name">Jane Doe</div>
+                <div class="user-role">Admin</div>
+              </div>
+              <button class="btn">View</button>
+            </div>
+            <div class="user-row">
+              <div class="user-avatar" style="background:#8a9198;">JS</div>
+              <div class="user-info">
+                <div class="user-name">John Smith</div>
+                <div class="user-role">Editor</div>
+              </div>
+              <button class="btn">View</button>
+            </div>
+            <div class="user-row">
+              <div class="user-avatar" style="background:#b6c2c9;">ML</div>
+              <div class="user-info">
+                <div class="user-name">Mary Lee</div>
+                <div class="user-role">User</div>
+              </div>
+              <button class="btn">View</button>
+            </div>
+            <div class="user-row">
+              <div class="user-avatar" style="background:#52606d;">AB</div>
+              <div class="user-info">
+                <div class="user-name">Alex Brown</div>
+                <div class="user-role">User</div>
+              </div>
+              <button class="btn">View</button>
+            </div>
+            <div class="user-row">
+              <div class="user-avatar" style="background:#8a9198;">EM</div>
+              <div class="user-info">
+                <div class="user-name">Emma Miller</div>
+                <div class="user-role">Admin</div>
+              </div>
+              <button class="btn">View</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-cards" style="flex: 0 0 40%;">
+        <!-- Card 4 -->
+        <div class="card4">
+          <div class="card-label">System Status</div>
+          <div class="card4-content">
+            <p style="font-size:1.2rem; font-weight:600;">All systems operational</p>
+            <button class="btn">Details</button>
+          </div>
+        </div>
+        <!-- Card 5 -->
+        <div class="card5">
+          <div class="card-label">Pending Requests</div>
+          <div class="card5-content">
+            <p style="font-size:2rem; font-weight:700; margin-bottom:0.2em;">5</p>
+            <p style="color:#52606d; font-size:1.1rem;">Awaiting Approval</p>
+            <button class="btn">Review</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

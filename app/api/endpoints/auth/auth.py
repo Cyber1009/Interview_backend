@@ -7,11 +7,11 @@ from sqlalchemy.orm import Session
 import logging
 from datetime import datetime, timedelta
 
-from app.api.deps import db_dependency, active_user_dependency
-from app.core.security.auth import authenticate_user, create_access_token, get_password_hash
+from app.api.dependencies import db_dependency, active_user_dependency
+from app.core.security.auth import authenticate_user, create_access_token, get_password_hash, verify_password
 from app.core.database.models import User
-from app.schemas import Token, UserResponse, PasswordChange
-from app.utils.error_utils import not_found, forbidden, bad_request
+from app.schemas.auth_schemas import AuthToken as Token, UserResponse, PasswordChange
+from app.api.exceptions import not_found, forbidden, bad_request
 from app.utils.subscription_utils import update_subscription_status
 from app.core.config import settings
 
@@ -99,3 +99,46 @@ def read_users_me(
     update_subscription_status(fresh_user_data, db)
     
     return fresh_user_data
+
+@auth_router.post("/password", 
+                response_model=UserResponse,
+                summary="Change Password",
+                description="Update the password for the currently authenticated user")
+def change_password(
+    password_change: PasswordChange,
+    db: Session = db_dependency,
+    current_user: User = active_user_dependency
+):
+    """
+    Change the current user's password.
+    
+    This endpoint allows users to update their password. It requires:
+    1. The current password for verification
+    2. A new password that meets security requirements
+    
+    Parameters:
+    - **current_password**: User's current password
+    - **new_password**: New password to set
+    
+    Returns:
+    - Updated user profile
+    
+    Raises:
+    - HTTP 400: Current password is incorrect or new password is invalid
+    """
+    # Verify current password
+    if not verify_password(password_change.current_password, current_user.hashed_password):
+        bad_request("Current password is incorrect")
+    
+    # Validate new password (you may want to add more validation rules)
+    if len(password_change.new_password) < 8:
+        bad_request("New password must be at least 8 characters long")
+    
+    # Update password
+    current_user.hashed_password = get_password_hash(password_change.new_password)
+    
+    # Save changes
+    db.commit()
+    db.refresh(current_user)
+    
+    return current_user

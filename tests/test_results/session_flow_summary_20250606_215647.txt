@@ -1,0 +1,15 @@
+INTERVIEW SESSION FLOW TEST RESULTS
+==================================================
+
+Test Date: 2025-06-06 21:56:47
+Videos Processed: 4
+Successful Transcriptions: 4/4
+
+ANALYSIS SUCCESS!
+Session ID: 1
+Analysis completed at: 2025-06-06T20:56:47.324946+00:00
+Total Words: 152
+Total Duration: 0 seconds
+Average Speaking Rate: 0 words/min
+Hiring Recommendation: requires_review
+Confidence Level: medium

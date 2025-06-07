@@ -1,29 +1,27 @@
-from fastapi import FastAPI, Depends, HTTPException, status, BackgroundTasks, APIRouter
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi import FastAPI, APIRouter
 from fastapi.openapi.utils import get_openapi
 from fastapi.responses import RedirectResponse
-from sqlalchemy.orm import Session
 import uvicorn
 import logging
-from pydantic import BaseModel
-from typing import Optional, List, Dict, Any
-from datetime import datetime, timedelta
-import asyncio
+import atexit
 
 # Import the bcrypt fix before other imports
 import app.core.security.bcrypt_fix  # Apply bcrypt compatibility patch
 
 # Import modules from consolidated structure
-from app.core.database.db import get_db, engine
+from app.core.database.db import engine, SessionLocal
 from app.core.database.models import create_tables
 from app.api.router import api_router
-from app.schemas.auth_schemas import Token  # Import Token schema from auth_schemas
 from app.core.config import settings
-from app.core.security.auth import get_current_user, authenticate_user, create_access_token
-from app.core.database.migrations import migrate_database  # Import the migration function
-from app.utils.datetime_utils import get_utc_now, safe_compare_dates  # Import datetime utilities
-from app.utils.subscription_utils import sync_all_subscription_statuses
+from app.core.database.migrations import migrate_database
+from app.core.middleware import setup_middlewares
+from app.core.tasks import setup_scheduler, shutdown_scheduler
+from app.utils.rate_limiter import limiter, enhanced_limiter  # Import the rate limiter
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
+from app.core.security.auth import seed_admin_account  # Updated import from consolidated auth module
+from app.api.exceptions import create_error_response, APIError, setup_exception_handlers  # Import from consolidated exceptions module
+from app.utils.datetime_utils import get_utc_now
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -36,66 +34,101 @@ try:
     
     # Run database migrations to update schema if needed
     migrate_database()
+    
+    # Create initial admin account if none exists
+    db = SessionLocal()
+    try:
+        admin = seed_admin_account(db)
+        if admin:
+            logger.info(f"Initial admin account created: {admin.username}")
+    except Exception as e:
+        logger.error(f"Error creating initial admin account: {e}")
+    finally:
+        db.close()
 except Exception as e:
     logger.error(f"Error setting up database: {e}")
     raise
 
 app = FastAPI(
     title="Interview Management Platform API",
-    description="""
-    # Interview Management Platform
+    description="""    # Interview Management Platform
     
-    This API powers an interview management platform that enables:
+    A comprehensive platform for managing remote asynchronous interviews with subscription-based access.
     
-    - **Interviewers**: Create and manage interview templates, questions, and review candidate responses
-    - **Candidates**: Join interviews using one-time tokens and submit recorded responses to questions
-    - **Administrators**: Manage user accounts, subscription status, and system maintenance
+    ## User Roles
     
-    ## Main features
+    - **Interviewers**: Create interview templates, manage questions, and review candidate responses
+    - **Candidates**: Join interview sessions using one-time tokens and submit recorded responses
+    - **Administrators**: Manage user accounts, monitor subscription status, and perform system maintenance
     
-    - Complete interview management for remote asynchronous interviews
-    - Secure access with token-based authentication
-    - Integration with Stripe for subscription management
-    - Audio recording uploads with automatic transcription
+    ## Core Features
     
-    ## Key endpoints by user role
-    
-    ### Interviewers
-    - `/api/v1/auth/login`: Authentication endpoint
-    - `/api/v1/interviewer/interviews`: Create and manage interviews
-    - `/api/v1/interviewer/profile`: User profile and theme customization
-    
-    ### Candidates
-    - `/api/v1/candidates`: Session management and recording submission
-    
-    ### Administrators
-    - `/api/v1/admin`: System management functions
+    - Subscription management with Stripe integration
+    - Secure authentication and role-based access control
+    - Interview template creation and management
+    - Candidate response recording and transcription
+    - Result analysis and reporting    ## API Structure
+      - `/api/v1/auth`: Authentication and user management
+    - `/api/v1/interviewer`: Interview creation and management
+    - `/api/v1/candidates`: Token-based interview access and recording submission
+      - `/interviews/access`: Get interview details and verify token
+      - `/interviews/start-session`: Start a new interview session
+      - `/interviews/complete-session`: Complete the interview session
+      - `/interviews/recordings`: Upload interview recordings
+    - `/api/v1/billing`: Subscription and payment processing
+    - `/api/v1/system`: System health and monitoring
     """,
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
     terms_of_service="https://example.com/terms/",
-    contact={
-        "name": "API Support",
-        "email": "support@example.com",
-    },
 )
 
-# Configure CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # In production, replace with specific origins
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# The limiter from slowapi doesn't have an init_app method
+# Instead, we set it as a state variable on the app
+app.state.limiter = limiter
+app.state.enhanced_limiter = enhanced_limiter
+
+# Configure exception handler for rate limiting
+@app.exception_handler(RateLimitExceeded)
+async def rate_limit_handler(request, exc):
+    from fastapi.responses import JSONResponse
+
+    # Create a standardized rate limit error response using the consolidated error handling
+    error_response = create_error_response(
+        error_type=APIError.TOO_MANY_REQUESTS,
+        request=request,
+        message="Rate limit exceeded. Please try again later.",
+    )
+    
+    # Add rate limit headers to the response
+    headers = {
+        "Retry-After": str(exc.retry_after),
+        "X-RateLimit-Limit": str(exc.limit),
+        "X-RateLimit-Reset": str(int(exc.reset_at.timestamp())),
+    }
+    
+    return JSONResponse(
+        status_code=429,
+        content=error_response,
+        headers=headers
+    )
+
+# Configure middlewares using the centralized setup function
+setup_middlewares(app)
+
+# Set up custom exception handlers
+setup_exception_handlers(app)
+
+# Add the SlowAPI middleware for rate limiting
+app.add_middleware(SlowAPIMiddleware)
 
 # Include API router with appropriate prefix
 app.include_router(api_router, prefix="/api/v1")  # Add API versioning
 
-# Keep the root path for backward compatibility
+# Root path redirects to API documentation
 @app.get("/", include_in_schema=False)
-def legacy_root():
+def root_redirect():
     """Redirect to the API documentation for better user experience"""
     return RedirectResponse(url="/docs")
 
@@ -119,10 +152,11 @@ def custom_openapi():
             "bearerFormat": "JWT",
             "description": "Enter the JWT token in the format: Bearer {token}"
         },
-        "BasicAuth": {
+        "AdminAuth": {
             "type": "http",
-            "scheme": "basic",
-            "description": "Basic authentication for admin endpoints"
+            "scheme": "bearer",
+            "bearerFormat": "JWT",
+            "description": "Admin JWT token obtained from /api/v1/admin/auth/login"
         }
     }
     
@@ -130,44 +164,54 @@ def custom_openapi():
     if "paths" in openapi_schema:
         for path in openapi_schema["paths"]:
             # Skip login endpoints and public endpoints
-            if "/auth/login" in path or "/system" in path or "/candidates/verify" in path:
+            if "/auth/login" in path or "/admin/auth" in path or "/system" in path or "/candidates/verify" in path:
                 continue
                 
-            # Apply Bearer Auth to most endpoints
+            # Apply appropriate auth to endpoints
             for method in openapi_schema["paths"][path]:
                 if openapi_schema["paths"][path][method].get("tags") and \
-                   "Administration" in openapi_schema["paths"][path][method].get("tags", []):
-                    # Admin endpoints use Basic Auth
-                    openapi_schema["paths"][path][method]["security"] = [{"BasicAuth": []}]
+                   "Admin" in openapi_schema["paths"][path][method].get("tags", []):
+                    # Admin endpoints use Admin JWT Auth
+                    openapi_schema["paths"][path][method]["security"] = [{"AdminAuth": []}]
                 else:
                     # Other protected endpoints use Bearer Auth
-                    openapi_schema["paths"][path][method]["security"] = [{"BearerAuth": []}]
-
-    # Add API tags with descriptions
+                    openapi_schema["paths"][path][method]["security"] = [{"BearerAuth": []}]    # Add API tags with descriptions - these should match tags used in router.py
     openapi_schema["tags"] = [
         {
-            "name": "Authentication",
-            "description": "Endpoints for user login, registration, and account management"
+            "name": "User",
+            "description": "User authentication, registration, and account management"
         },
         {
-            "name": "Interviewer",
-            "description": "Endpoints for interviewers to create and manage interviews, questions, tokens, and view results"
+            "name": "Admin",
+            "description": "Admin authentication, system management, monitoring, and user administration"
         },
         {
-            "name": "Candidates",
-            "description": "Endpoints for interview participants to join sessions and submit recordings"
+            "name": "Interviewer Panel",
+            "description": "Interview creation, question management, token generation, results viewing, and profile settings"
+        },        
+        {   
+            "name": "Candidate Portal",
+            "description": "Token-based interview access API with unified endpoints for interview access, session management, and recording submission. Use the /interviews/start-session endpoint to start a session and /interviews/complete-session to complete it. All candidate interactions require a valid token."
         },
         {
-            "name": "Administration",
-            "description": "Administrative endpoints for system maintenance and user account management"
+            "name": "Billing",
+            "description": "Subscription management and payment processing"
+        }
+    ]
+    
+    # Organize tags in a logical order for display in UI
+    openapi_schema["x-tagGroups"] = [
+        {
+            "name": "Platform Access",
+            "tags": ["User", "Admin"]
         },
         {
-            "name": "Payments",
-            "description": "Subscription and payment management"
+            "name": "Core Platform",
+            "tags": ["Interviewer Panel", "Candidate Portal"]
         },
         {
-            "name": "System",
-            "description": "System health and status endpoints"
+            "name": "Platform Operations",
+            "tags": ["Billing"]
         }
     ]
     
@@ -175,6 +219,15 @@ def custom_openapi():
     return app.openapi_schema
 
 app.openapi = custom_openapi
+
+# Set up background task scheduler
+@app.on_event("startup")
+def start_scheduler():
+    """Start the background task scheduler when the application starts."""
+    setup_scheduler()
+
+# Register shutdown function to properly close the scheduler
+atexit.register(shutdown_scheduler)
 
 if __name__ == "__main__":
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
