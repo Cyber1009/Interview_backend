@@ -1,3 +1,0 @@
-{
-  "error": "Analysis exception: Error code: 400 - {'error': {'message': 'max_tokens is too large: 6000. This model supports at most 4096 completion tokens, whereas you provided 6000.', 'type': 'invalid_request_error', 'param': 'max_tokens', 'code': 'invalid_value'}}"
-}

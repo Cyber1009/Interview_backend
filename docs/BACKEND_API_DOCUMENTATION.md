@@ -105,31 +105,6 @@ This document provides the complete API structure for frontend integration. All 
 
 ---
 
-## Batch Processing
-
-### Base Path: `/batch-processing`
-
-| Method | Endpoint | Description | Request Body | Response |
-|--------|----------|-------------|--------------|----------|
-| `POST` | `/batch-processing/upload` | Upload multiple files for batch processing | `Multipart Form` | `BatchJobCreateResponse` |
-| `GET` | `/batch-processing/{job_id}/status` | Get batch job status | - | `BatchJobStatus` |
-| `GET` | `/batch-processing/{job_id}/results` | Get complete batch results | - | `BatchJobResponse` |
-| `GET` | `/batch-processing/` | List user's batch jobs | Query params | `List[BatchJobStatus]` |
-| `DELETE` | `/batch-processing/{job_id}` | Cancel batch job | - | `Message` |
-
-**Upload Form Fields:**
-- `files`: Multiple audio/video files (mp4, mov, avi, wav, mp3, m4a, etc.)
-- `job_name`: Optional job name
-- `role`: Interview role
-- `company`: Company name
-- `interview_type`: Type of interview
-- `enable_stress_analysis`: Boolean (default: true)
-- `enable_authenticity_analysis`: Boolean (default: true)
-- `transcription_quality_upgrade`: Boolean (default: true)
-- `save_results`: Boolean (default: true)
-
----
-
 ## Admin Panel
 
 ### Base Path: `/admin`
