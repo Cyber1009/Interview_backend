@@ -23,7 +23,8 @@ import json
 
 from app.api.dependencies import db_dependency, active_user_dependency
 from app.core.database.models import User
-from backup.integrated_interview_service import IntegratedInterviewService
+from app.services.analysis.analysis_service import AnalysisService
+from app.services.transcription.transcription_service import TranscriptionService
 from app.schemas.interview_schemas import InterviewAnalysisResponse
 
 # Create router
@@ -379,9 +380,9 @@ async def process_batch_job(job_id: str, file_data: List[Dict[str, Any]]):
         # Mark job as started
         job_data["status"] = "processing"
         job_data["started_at"] = datetime.now()
-        
-        # Initialize integrated service
-        integrated_service = IntegratedInterviewService()
+          # Initialize services
+        transcription_service = TranscriptionService()
+        analysis_service = AnalysisService()
         processing_params = job_data["processing_params"]
         
         # Process each file
@@ -409,23 +410,32 @@ async def process_batch_job(job_id: str, file_data: List[Dict[str, Any]]):
             
             try:
                 start_time = datetime.now()
-                
-                # Process the file
-                result = integrated_service.process_interview_file(
-                    file_name=filename,
+                  # Process the file with transcription and analysis
+                # First transcribe the file
+                transcription_result = transcription_service.transcribe_file(
                     file_content=content,
+                    file_name=filename
+                )
+                
+                # Then analyze the transcription
+                analysis_result = analysis_service.analyze_interview(
+                    transcript=transcription_result.get("text", ""),
                     context={
                         "role": processing_params["role"],
                         "company": processing_params["company"],
                         "interview_type": processing_params["interview_type"]
                     },
                     options={
-                        "use_quality_upgrade": processing_params["transcription_quality_upgrade"],
                         "enable_stress_analysis": processing_params["enable_stress_analysis"],
-                        "enable_authenticity_analysis": processing_params["enable_authenticity_analysis"],
-                        "save_results": processing_params["save_results"]
+                        "enable_authenticity_analysis": processing_params["enable_authenticity_analysis"]
                     }
                 )
+                
+                # Combine results
+                result = {
+                    "transcription": transcription_result,
+                    "analysis": analysis_result
+                }
                 
                 processing_time = (datetime.now() - start_time).total_seconds()
                 

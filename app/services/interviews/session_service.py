@@ -160,18 +160,19 @@ class SessionService:
         Args:
             session_id: ID of the session
             recording_ids: List of recording IDs to process
-        """
-        from backup.integrated_interview_service import IntegratedInterviewService
-        
-        # Create a new database session for background processing
+        """        # Create a new database session for background processing
         from app.core.database.db import SessionLocal
+        from app.services.analysis.analysis_service import AnalysisService
+        from app.services.transcription.transcription_service import TranscriptionService
+        
         db = SessionLocal()
         
         try:
             logger.info(f"Starting batch processing for session {session_id} with {len(recording_ids)} recordings")
             
-            # Initialize integrated service for batch processing
-            integrated_service = IntegratedInterviewService()
+            # Initialize services for batch processing
+            transcription_service = TranscriptionService()
+            analysis_service = AnalysisService()
             
             transcripts = []
             questions = []
@@ -181,10 +182,9 @@ class SessionService:
                 recording = db.query(Recording).filter(Recording.id == recording_id).first()
                 if not recording:
                     continue
-                
-                # Transcribe the recording
+                  # Transcribe the recording
                 try:
-                    transcription_result = integrated_service.transcription_service.transcribe_file(recording.file_path)
+                    transcription_result = transcription_service.transcribe_file(recording.file_path)
                     
                     if "error" not in transcription_result:
                         recording.transcript = transcription_result.get("text", "")
@@ -220,19 +220,19 @@ class SessionService:
                             recordings_data.append({
                                 'file_path': recording.file_path,
                                 'question_text': question.text if question else f"Question {i+1}",
-                                'recording_id': recording.id
-                            })
+                                'recording_id': recording.id                            })
                     
                     if recordings_data:
-                        # Use comprehensive session processing for analysis
+                        # Use analysis service for session processing
                         session_context = {
                             "session_id": session_id,
                             "analysis_type": "session_completion_batch"
                         }
                         
-                        session_analysis = integrated_service.process_session_recordings(
+                        # Process session analysis using the analysis service
+                        session_analysis = analysis_service.analyze_session_batch(
                             recordings_data=recordings_data,
-                            session_context=session_context
+                            context=session_context
                         )
                         
                         logger.info(f"Comprehensive session analysis completed for session {session_id}")
